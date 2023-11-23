@@ -1,5 +1,7 @@
 import requests
-import socket
+
+
+timeout=2
 
 
 def ip_list(iprange):
@@ -18,58 +20,73 @@ def ip_list(iprange):
 ip_list(input("input ip range(xxx.xxx.xxx) ==>"))
 
 
-def checker83(ip: str):
+def checker83(ip: str, timeout):
     try:
         url = f"http://{ip}:2083/login"
 
         data = {'username': 'admin', 'password': 'admin'}
 
-        x = requests.post(url, data, timeout=3)
+        x = requests.post(url, data, timeout=timeout)
 
         x = x.json()
 
         if (x["success"]) == True:
-            return True, "--------------------------------------------------------------------"
-        else: return True,f"-------------------------{x['msg']}-------------------------"
+            return True
+        else:
+            return f"-------------------------{x['msg']}-------------------------"
     except:
         return False
-    
-def checker53(ip: str):
+
+
+def checker53(ip: str, timeout):
     try:
         url = f"http://{ip}:2053/login"
 
         data = {'username': 'admin', 'password': 'admin'}
 
-        x = requests.post(url, data, timeout=3)
+        x = requests.post(url, data, timeout=timeout)
 
         x = x.json()
 
         if (x["success"]) == True:
-            return f"********************************{True}******************************"
-        else: return True,f"-------------------------{x['msg']}-------------------------"
+            return True
+        else:
+            return x['msg']
     except:
         return False
 
-def nmap(ip):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    result = sock.connect_ex((ip, 80))
-    if result == 0:
-        return ip, True
-    else:
-        return ip, False
-    sock.close()
 
 
 x = 0
+ips = open("ips.txt", "r").readlines()
+for ip in ips:
+    ip = ip.strip()
+    result53 = checker53(ip,timeout)
+    result83 = checker83(ip,timeout)
 
-for i in range(1):
-    ips = open("ips.txt", "r").readlines()
-    for ip in ips:
-        ip = ip.strip()
-        print(f"\n{ip}: ")
-        print("2083:",checker83(ip))
-        print("2053:",checker53(ip))
-        x += 1
+    if  result53 == False:
+        pass
+    elif result53 == True:
+        print(ip,":2053")
+    else:
+        print(ip,":2053",result53)
+
+    if result83 == False:
+        pass
+    elif result83 == True:
+        print(ip,":2083")
+    else:
+        print(ip,":2053",result83)
+    x= x+1
+    print(x)
+
+
+
+
+
+
+
+
 
 
 input("prees inter to close")
