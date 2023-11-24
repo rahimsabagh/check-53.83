@@ -1,9 +1,10 @@
-
 import requests
+import os
 
 
 # Set the timeout for requests
-timeout = 2
+# please set by network status
+timeout = 5
 
 
 def ip_list(iprange):
@@ -91,3 +92,4 @@ for ip in ips:
         print(ip, ":2053", result83)
 
 input("press enter to close")
+os.system("clear")
