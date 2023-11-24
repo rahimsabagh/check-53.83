@@ -1,92 +1,93 @@
+
 import requests
 
 
-timeout=2
+# Set the timeout for requests
+timeout = 2
 
 
 def ip_list(iprange):
+    """
+    Generate a list of IP addresses within the given range.
+    """
+    # Open a file to store the IP addresses
     my_file = open("ips.txt", "w")
     my_file.write("")
     my_file.close()
-    x = 0
-    my_file = open("ips.txt", "a+")
-    while x != 257:
-        my_file.write(f"{iprange}.{x}\n")
-        x += 1
 
-    my_file.close()
+    # Generate the IP addresses and write them to the file
+    for x in range(257):
+        with open("ips.txt", "a+") as my_file:
+            my_file.write(f"{iprange}.{x}\n")
 
 
 ip_list(input("input ip range(xxx.xxx.xxx) ==>"))
 
 
 def checker83(ip: str, timeout):
+    """
+    Check if the Plesk server at the given IP address and port 2083 is accessible.
+    """
     try:
         url = f"http://{ip}:2083/login"
 
         data = {'username': 'admin', 'password': 'admin'}
 
-        x = requests.post(url, data, timeout=timeout)
+        response = requests.post(url, data, timeout=timeout)
 
-        x = x.json()
+        response_json = response.json()
 
-        if (x["success"]) == True:
+        if response_json["success"]:
             return True
         else:
-            return f"-------------------------{x['msg']}-------------------------"
+            return response_json['msg']
     except:
         return False
 
 
 def checker53(ip: str, timeout):
+    """
+    Check if the Plesk server at the given IP address and port 2053 is accessible.
+    """
     try:
         url = f"http://{ip}:2053/login"
 
         data = {'username': 'admin', 'password': 'admin'}
 
-        x = requests.post(url, data, timeout=timeout)
+        response = requests.post(url, data, timeout=timeout)
 
-        x = x.json()
+        response_json = response.json()
 
-        if (x["success"]) == True:
+        if response_json["success"]:
             return True
         else:
-            return x['msg']
+            return response_json['msg']
     except:
         return False
 
 
+# Read the IP addresses from the file
+with open("ips.txt", "r") as file:
+    ips = file.readlines()
 
-x = 0
-ips = open("ips.txt", "r").readlines()
+# Iterate over the IP addresses and check if the Plesk servers are accessible
 for ip in ips:
     ip = ip.strip()
-    result53 = checker53(ip,timeout)
-    result83 = checker83(ip,timeout)
+    result53 = checker53(ip, timeout)
+    result83 = checker83(ip, timeout)
 
-    if  result53 == False:
+    if result53 == False:
         pass
     elif result53 == True:
-        print(ip,":2053")
+        print(ip, ":2053")
     else:
-        print(ip,":2053",result53)
+        print(ip, ":2053", result53)
 
     if result83 == False:
         pass
     elif result83 == True:
-        print(ip,":2083")
+        print(ip, ":2083")
     else:
-        print(ip,":2053",result83)
-    x= x+1
-    print(x)
+        print(ip, ":2053", result83)
 
-
-
-
-
-
-
-
-
-
-input("prees inter to close")
+input("press enter to close")
