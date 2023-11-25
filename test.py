@@ -1,28 +1,30 @@
+
 import requests
 import os
 
 
 # Set the timeout for requests
 # please set by network status
-timeout = 5
+timeout = 2
 
 
 def ip_list(iprange):
     """
     Generate a list of IP addresses within the given range.
     """
-    # Open a file to store the IP addresses
+    # clear file
     my_file = open("ips.txt", "w")
     my_file.write("")
     my_file.close()
 
     # Generate the IP addresses and write them to the file
-    for x in range(257):
-        with open("ips.txt", "a+") as my_file:
-            my_file.write(f"{iprange}.{x}\n")
+    for y in range(257):
+        for x in range(257):
+            with open("ips.txt", "a+") as my_file:
+                my_file.write(f"{iprange}.{y}.{x}\n")
 
 
-ip_list(input("input ip range(xxx.xxx.xxx) ==>"))
+ip_list(input("input ip range(xxx.xxx) ==>"))
 
 
 def checker83(ip: str, timeout):
