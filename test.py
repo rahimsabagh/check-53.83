@@ -2,10 +2,30 @@
 import requests
 import os
 
-
 # Set the timeout for requests
 # please set by network status
 timeout = 2
+
+
+
+try:os.mkdir("data")
+except:pass
+
+
+def loger(ip, port, text):
+    """
+    Log the result of checking the Plesk server at the given IP address and port.
+    """
+    with open("data/log.log", "a+") as file:
+        file.write(f"{ip}:{port} is {text}\n")
+        file.close()
+
+    
+        with open("data/true.log", "a+") as T:
+            if text == True:
+                T.write(f"{ip}:{port} is {text}\n")
+                T.close()
+loger("info","","loger started")
 
 
 def ip_list(iprange):
@@ -13,15 +33,17 @@ def ip_list(iprange):
     Generate a list of IP addresses within the given range.
     """
     # clear file
-    my_file = open("ips.txt", "w")
+    my_file = open("data/ips.txt", "w")
     my_file.write("")
     my_file.close()
 
     # Generate the IP addresses and write them to the file
     for y in range(257):
         for x in range(257):
-            with open("ips.txt", "a+") as my_file:
+            with open("data/ips.txt", "a+") as my_file:
                 my_file.write(f"{iprange}.{y}.{x}\n")
+    print("ip list created")
+    loger("info","","ip list created")
 
 
 ip_list(input("input ip range(xxx.xxx) ==>"))
@@ -70,7 +92,7 @@ def checker53(ip: str, timeout):
 
 
 # Read the IP addresses from the file
-with open("ips.txt", "r") as file:
+with open("data/ips.txt", "r") as file:
     ips = file.readlines()
 
 # Iterate over the IP addresses and check if the Plesk servers are accessible
@@ -81,17 +103,23 @@ for ip in ips:
 
     if result53 == False:
         pass
+        loger(ip, 2053, False)
     elif result53 == True:
         print(ip, ":2053")
+        loger(ip, 2053, True)
     else:
         print(ip, ":2053", result53)
+        loger(ip, 2053, result53)
 
     if result83 == False:
         pass
+        loger(ip, 2083, False)
     elif result83 == True:
         print(ip, ":2083")
+        loger(ip, 2083, True)
     else:
         print(ip, ":2053", result83)
+        loger(ip, 2083, result83)
 
+loger("info","","Done!")
 input("press enter to close")
-os.system("clear")
