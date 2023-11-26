@@ -78,6 +78,26 @@ def checker83(ip: str, timeout):
     except:
         return False
 
+def checker54(ip: str, timeout):
+    """
+    Check if the Plesk server at the given IP address and port 54321 is accessible.
+    """
+    try:
+        url = f"http://{ip}:54321/login"
+
+        data = {'username': 'admin', 'password': 'admin'}
+
+        response = requests.post(url, data, timeout=timeout)
+
+        response_json = response.json()
+
+        if response_json["success"]:
+            return True
+        else:
+            return response_json['msg']
+    except:
+        return False
+
 
 def checker53(ip: str, timeout):
     """
@@ -109,6 +129,7 @@ for ip in ips:
     ip = ip.strip()
     result53 = checker53(ip, timeout)
     result83 = checker83(ip, timeout)
+    result54 = checker54(ip,timeout)
 
     if result53 == False:
         pass
@@ -127,8 +148,18 @@ for ip in ips:
         print(ip, ":2083")
         loger(ip, 2083, True)
     else:
-        print(ip, ":2053", result83)
+        print(ip, ":2083", result83)
         loger(ip, 2083, result83)
+
+    if result54 == False:
+        pass
+        loger(ip, 54321, False)
+    elif result83 == True:
+        print(ip, ":54321")
+        loger(ip, 54321, True)
+    else:
+        print(ip, ":54321", result83)
+        loger(ip, 54321, result83)
 
 loger("info","","Done!")
 input("press enter to close")
