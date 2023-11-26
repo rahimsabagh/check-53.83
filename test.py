@@ -16,19 +16,24 @@ def loger(ip, port, text):
     """
     Log the result of checking the Plesk server at the given IP address and port.
     """
-    with open("data/log.log", "a+") as file:
-        file.write(f"{ip}:{port} is {text}\n")
+    with open("data/log.html", "a+") as file:
+        file.write(f"{ip}:{port} is {text}<br/>")
         file.close()
 
     
-        with open("data/true.log", "a+") as T:
+        with open("data/true.html", "a+") as T:
             if text == True:
-                T.write(f"{ip}:{port} is {text}\n")
+                T.write(f"{ip}:{port} is {text}<br/>")
+                T.close()
+            elif text == False:
+                pass
+            else:
+                T.write(f"{ip}:{port} is {text}<br/>")
                 T.close()
 loger("info","","loger started")
 
 
-def ip_list(iprange):
+def ip_list(iprange,s_y):
     """
     Generate a list of IP addresses within the given range.
     """
@@ -39,14 +44,17 @@ def ip_list(iprange):
 
     # Generate the IP addresses and write them to the file
     for y in range(257):
-        for x in range(257):
-            with open("data/ips.txt", "a+") as my_file:
-                my_file.write(f"{iprange}.{y}.{x}\n")
+        if y < s_y:
+            pass
+        else:
+            for x in range(257):
+                with open("data/ips.txt", "a+") as my_file:
+                    my_file.write(f"{iprange}.{y}.{x}\n")
     print("ip list created")
     loger("info","","ip list created")
 
 
-ip_list(input("input ip range(xxx.xxx) ==>"))
+ip_list(input("input ip range(xxx.xxx) ==>"),int(input("'y' start from ==>")))
 
 
 def checker83(ip: str, timeout):
