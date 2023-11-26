@@ -20,16 +20,17 @@ def loger(ip, port, text):
         file.write(f"{ip}:{port} is {text}<br/>")
         file.close()
 
-    
+    if text == True:      
         with open("data/true.html", "a+") as T:
-            if text == True:
-                T.write(f"{ip}:{port} is {text}<br/>")
-                T.close()
-            elif text == False:
-                pass
-            else:
-                T.write(f"{ip}:{port} is {text}<br/>")
-                T.close()
+            T.write(f"{ip}:{port} is {text}<br/>")
+            T.close()
+    elif text==False:pass
+    else:
+        with open("data/server.html", "a+") as T:
+            T.write(f"{ip}:{port} is {text}<br/>")
+            T.close()
+
+            
 loger("info","","loger started")
 
 
