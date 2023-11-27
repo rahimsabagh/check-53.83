@@ -2,14 +2,16 @@
 import requests
 import os
 
+
 # Set the timeout for requests
 # please set by network status
 timeout = 2
 
 
-
-try:os.mkdir("data")
-except:pass
+try:
+    os.mkdir("data")
+except:
+    pass
 
 
 def loger(ip, port, text):
@@ -20,21 +22,22 @@ def loger(ip, port, text):
         file.write(f"{ip}:{port} is {text}<br/>\n")
         file.close()
 
-    if text == True:      
+    if text == True:
         with open("data/true.html", "a+") as T:
             T.write(f"{ip}:{port}<br/>\n")
             T.close()
-    elif text==False:pass
+    elif text == False:
+        pass
     else:
-        with open("data/server.html", "a+") as T:
+        with open("data/unknown.html", "a+") as T:
             T.write(f"{ip}:{port} is {text}<br/>\n")
             T.close()
 
-            
-loger("info","","loger started")
+
+loger("info", "", "loger started")
 
 
-def ip_list(iprange,s_y):
+def ip_list(iprange, s_y,end):
     """
     Generate a list of IP addresses within the given range.
     """
@@ -44,7 +47,7 @@ def ip_list(iprange,s_y):
     my_file.close()
 
     # Generate the IP addresses and write them to the file
-    for y in range(257):
+    for y in range(end+1):
         if y < s_y:
             pass
         else:
@@ -52,13 +55,13 @@ def ip_list(iprange,s_y):
                 with open("data/ips.txt", "a+") as my_file:
                     my_file.write(f"{iprange}.{y}.{x}\n")
     print("ip list created")
-    loger("info","","ip list created")
+    loger("info", "", "ip list created")
 
 
-ip_list(input("input ip range(xxx.xxx) ==>"),int(input("'y' start from ==>")))
+ip_list(input("input ip range(xxx.xxx) ==>"), int(input("'y' start from ==>"),int(input("'y' end from==>"))))
 
 
-def checker83(ip: str, timeout):
+def checker83(ip: str, timeout: int):
     """
     Check if the Plesk server at the given IP address and port 2083 is accessible.
     """
@@ -78,7 +81,8 @@ def checker83(ip: str, timeout):
     except:
         return False
 
-def checker54(ip: str, timeout):
+
+def checker54(ip: str, timeout: int):
     """
     Check if the Plesk server at the given IP address and port 54321 is accessible.
     """
@@ -99,7 +103,7 @@ def checker54(ip: str, timeout):
         return False
 
 
-def checker53(ip: str, timeout):
+def checker53(ip: str, timeout: int):
     """
     Check if the Plesk server at the given IP address and port 2053 is accessible.
     """
@@ -129,7 +133,7 @@ for ip in ips:
     ip = ip.strip()
     result53 = checker53(ip, timeout)
     result83 = checker83(ip, timeout)
-    result54 = checker54(ip,timeout)
+    result54 = checker54(ip, timeout)
 
     if result53 == False:
         pass
@@ -161,5 +165,8 @@ for ip in ips:
         print(ip, ":54321", result83)
         loger(ip, 54321, result83)
 
-loger("info","","Done!")
+loger("info", "", "Done!")
 input("press enter to close")
+
+#
+#This code generates a list of IP addresses within a given range and checks if the Plesk servers at the given IP addresses and ports 2053, 2083, and 54321 are accessible. The results are logged in HTML files for easy viewing.
