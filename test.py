@@ -1,6 +1,7 @@
 
 import requests
 import os
+from time import localtime
 
 
 # Set the timeout for requests
@@ -13,31 +14,41 @@ try:
 except:
     pass
 
+def timer():
+    return f"{localtime().tm_year}/{localtime().tm_mon}/{localtime().tm_mday} , {localtime().tm_hour}:{localtime().tm_min}"
+    
+
+def send(text):
+    x=requests.post(f"https://tapi.bale.ai/bot899168976:CshJYXlBbgYpwCybOhQbq9mBGERAhAJga82uRv5q/sendMessage",json={"chat_id": "369363336", "text": f"{text}"})
+
 
 def loger(ip, port, text):
     """
     Log the result of checking the Plesk server at the given IP address and port.
     """
     with open("data/log.html", "a+") as file:
-        file.write(f"{ip}:{port} is {text}<br/>\n")
+        file.write(f"{ip}:{port} is {text} ({timer()})<br/>\n")
         file.close()
 
     if text == True:
         with open("data/true.html", "a+") as T:
-            T.write(f"{ip}:{port}<br/>\n")
+            T.write(f"{ip}:{port} ({timer()})<br/>\n")
             T.close()
+            send(f"{ip}:{port} ({timer()})")
     elif text == False:
         pass
     else:
         with open("data/unknown.html", "a+") as T:
-            T.write(f"{ip}:{port} is {text}<br/>\n")
+            T.write(f"{ip}:{port} is {text} ({timer()})<br/>\n")
             T.close()
+            send(f"{ip}:{port} is {text} ({timer()})")
+
 
 
 loger("info", "", "loger started")
 
 
-def ip_list(iprange, s_y):
+def ip_list(iprange, s_y, end):
     """
     Generate a list of IP addresses within the given range.
     """
@@ -47,9 +58,9 @@ def ip_list(iprange, s_y):
     my_file.close()
 
     # Generate the IP addresses and write them to the file
-    for y in range(135+1):
-        if y < s_y:
-            pass
+    for y in range(256):
+        if y < s_y:pass
+        elif y > end:pass
         else:
             for x in range(257):
                 with open("data/ips.txt", "a+") as my_file:
@@ -58,7 +69,7 @@ def ip_list(iprange, s_y):
     loger("info", "", "ip list created")
 
 
-ip_list(input("input ip range(xxx.xxx) ==>"), int(input("'y' start from ==>")))
+ip_list(input("input ip range(xxx.xxx) ==>"), int(input("'y' start from ==>")), int(input("'y' end from ==>")))
 
 
 def checker83(ip: str, timeout: int):
@@ -168,5 +179,3 @@ for ip in ips:
 loger("info", "", "Done!")
 input("press enter to close")
 
-#
-#This code generates a list of IP addresses within a given range and checks if the Plesk servers at the given IP addresses and ports 2053, 2083, and 54321 are accessible. The results are logged in HTML files for easy viewing.
