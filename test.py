@@ -37,7 +37,7 @@ def loger(ip, port, text):
 loger("info", "", "loger started")
 
 
-def ip_list(iprange, s_y,end):
+def ip_list(iprange, s_y):
     """
     Generate a list of IP addresses within the given range.
     """
@@ -47,7 +47,7 @@ def ip_list(iprange, s_y,end):
     my_file.close()
 
     # Generate the IP addresses and write them to the file
-    for y in range(end+1):
+    for y in range(135+1):
         if y < s_y:
             pass
         else:
@@ -58,7 +58,7 @@ def ip_list(iprange, s_y,end):
     loger("info", "", "ip list created")
 
 
-ip_list(input("input ip range(xxx.xxx) ==>"), int(input("'y' start from ==>"),int(input("'y' end from==>"))))
+ip_list(input("input ip range(xxx.xxx) ==>"), int(input("'y' start from ==>")))
 
 
 def checker83(ip: str, timeout: int):
