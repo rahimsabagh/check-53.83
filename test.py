@@ -17,17 +17,17 @@ def loger(ip, port, text):
     Log the result of checking the Plesk server at the given IP address and port.
     """
     with open("data/log.html", "a+") as file:
-        file.write(f"{ip}:{port} is {text}<br/>")
+        file.write(f"{ip}:{port} is {text}<br/>\n")
         file.close()
 
     if text == True:      
         with open("data/true.html", "a+") as T:
-            T.write(f"{ip}:{port} is {text}<br/>")
+            T.write(f"{ip}:{port}<br/>\n")
             T.close()
     elif text==False:pass
     else:
         with open("data/server.html", "a+") as T:
-            T.write(f"{ip}:{port} is {text}<br/>")
+            T.write(f"{ip}:{port} is {text}<br/>\n")
             T.close()
 
             
