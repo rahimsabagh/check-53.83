@@ -2,6 +2,7 @@
 import requests
 import os
 from time import localtime
+from ping3 import ping
 
 
 # Set the timeout for requests
@@ -64,10 +65,11 @@ def ip_list(iprange, s_y, end):
         elif y > end:pass
         else:
             for x in range(257):
-                with open("data/ips.txt", "a+") as my_file:
-                    my_file.write(f"{iprange}.{y}.{x}\n")
-    print("ip list created")
-    loger("info", "", "ip list created")
+                ip = f"{iprange}.{y}.{x}"
+                if ping(ip,1) != None:
+                    with open("data/ips.txt", "a+") as my_file:
+                        my_file.write(f"{ip}\n")
+
 
 
 ip_list(input("input ip range(xxx.xxx) ==>"), int(input("'y' start from ==>")), int(input("'y' end from ==>")))
