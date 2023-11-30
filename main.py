@@ -1,4 +1,4 @@
-
+print(1)
 import requests
 import os
 from time import localtime
@@ -14,6 +14,7 @@ try:
     os.mkdir("data")
 except:
     pass
+
 
 def timer():
     return f"{localtime().tm_year}/{localtime().tm_mon}/{localtime().tm_mday} , {localtime().tm_hour}:{localtime().tm_min}"
@@ -50,25 +51,26 @@ def loger(ip, port, text):
 loger("info", "", "loger started")
 
 
-def ip_list(iprange, s_y, end):
+def ip_list(iprange, y_start, y_end):
     """
     Generate a list of IP addresses within the given range.
     """
+    if y_start  == "": y_start = 0
+    if y_end == "": y_end = 255
     # clear file
     my_file = open("data/ips.txt", "w")
     my_file.write("")
     my_file.close()
 
     # Generate the IP addresses and write them to the file
-    for y in range(256):
-        if y < s_y:pass
-        elif y > end:pass
+    for y in range(260):
+        if y < y_start:pass
+        elif y > y_end:pass
         else:
             for x in range(257):
                 ip = f"{iprange}.{y}.{x}"
-                if ping(ip,1) != None:
-                    with open("data/ips.txt", "a+") as my_file:
-                        my_file.write(f"{ip}\n")
+                with open("data/ips.txt", "a+") as my_file:
+                    my_file.write(f"{ip}\n")
 
 
 
@@ -143,41 +145,45 @@ with open("data/ips.txt", "r") as file:
     ips = file.readlines()
 
 # Iterate over the IP addresses and check if the Plesk servers are accessible
+
 for ip in ips:
     ip = ip.strip()
-    result53 = checker53(ip, timeout)
-    result83 = checker83(ip, timeout)
-    result54 = checker54(ip, timeout)
+    if ping(ip,1) != None:
+        
+        
+        result53 = checker53(ip, timeout)
+        result83 = checker83(ip, timeout)
+        result54 = checker54(ip, timeout)
 
-    if result53 == False:
-        pass
-        loger(ip, 2053, False)
-    elif result53 == True:
-        print(ip, ":2053")
-        loger(ip, 2053, True)
-    else:
-        print(ip, ":2053", result53)
-        loger(ip, 2053, result53)
+        if result53 == False:
+            pass
+            loger(ip, 2053, False)
+        elif result53 == True:
+            print(ip, ":2053")
+            loger(ip, 2053, True)
+        else:
+            print(ip, ":2053", result53)
+            loger(ip, 2053, result53)
 
-    if result83 == False:
-        pass
-        loger(ip, 2083, False)
-    elif result83 == True:
-        print(ip, ":2083")
-        loger(ip, 2083, True)
-    else:
-        print(ip, ":2083", result83)
-        loger(ip, 2083, result83)
+        if result83 == False:
+            pass
+            loger(ip, 2083, False)
+        elif result83 == True:
+            print(ip, ":2083")
+            loger(ip, 2083, True)
+        else:
+            print(ip, ":2083", result83)
+            loger(ip, 2083, result83)
 
-    if result54 == False:
-        pass
-        loger(ip, 54321, False)
-    elif result83 == True:
-        print(ip, ":54321")
-        loger(ip, 54321, True)
-    else:
-        print(ip, ":54321", result83)
-        loger(ip, 54321, result83)
+        if result54 == False:
+            pass
+            loger(ip, 54321, False)
+        elif result83 == True:
+            print(ip, ":54321")
+            loger(ip, 54321, True)
+        else:
+            print(ip, ":54321", result83)
+            loger(ip, 54321, result83)
 
 loger("info", "", "Done!")
 input("press enter to close")
