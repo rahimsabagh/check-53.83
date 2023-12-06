@@ -1,6 +1,6 @@
 # how to install
 
-**: **
+**:**
 ```
 pip install requests==2.22.0 && pip install ping3
 ```
