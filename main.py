@@ -1,3 +1,6 @@
+
+import tkinter as tk
+
 # print(2)
 import requests
 import os
@@ -74,8 +77,52 @@ def ip_list(iprange, y_start, y_end):
 
 
 
-ip_list(input("input ip range(xxx.xxx) ==>"), int(input("'y' start from ==>")), int(input("'y' end from ==>")))
 
+root = tk.Tk()
+root.title("Input App") 
+
+input_label = tk.Label(root, text="Enter range input:")
+input_label.pack()
+
+input_range = tk.Entry(root)
+input_range.pack()
+
+
+
+input_label = tk.Label(root, text="Enter y start:")
+input_label.pack()
+
+input_start = tk.Entry(root)
+input_start.pack()
+
+
+
+input_label = tk.Label(root, text="Enter y end:")
+input_label.pack()
+
+input_end = tk.Entry(root)
+input_end.pack()
+
+
+
+
+
+
+def get_input():
+    Range = (input_range.get())
+    start = int(input_start.get())
+    end = int(input_end.get())
+    root.destroy()
+    ip_list(Range,start,end)
+    
+    
+    
+
+input_button = tk.Button(root, text="Get Input", command=get_input).pack() 
+
+# input_button.pack()
+
+root.mainloop()
 
 def checker83(ip: str, timeout: int):
     """
