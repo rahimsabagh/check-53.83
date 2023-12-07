@@ -78,8 +78,8 @@ def ip_list(iprange, y_start, y_end):
                 ip = f"{iprange}.{y}.{x}"
                 with open("data/ips.txt", "a+") as my_file:
                     my_file.write(f"{ip}\n")
-    os.system("data\index.html")
     os.system("data\iunknown.html")
+    os.system("data\index.html")
     os.system("xdg-open data/iunknown.html")
     os.system("xdg-open data/index.html")
 
