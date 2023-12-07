@@ -60,6 +60,12 @@ def ip_list(iprange, y_start, y_end):
     """
     if y_start  == "": y_start = 0
     if y_end == "": y_end = 255
+    with open("data/index.html", "w") as T:
+        T.write(f'''<a href="unknown.html">unknown</a> 
+                    <a href="log.txt">log</a>
+                    <a href="ips.txt">ip's</a><br/>
+                ''')
+        T.close()
     # clear file
     my_file = open("data/ips.txt", "w")
     my_file.write("")
@@ -74,7 +80,8 @@ def ip_list(iprange, y_start, y_end):
                 ip = f"{iprange}.{y}.{x}"
                 with open("data/ips.txt", "a+") as my_file:
                     my_file.write(f"{ip}\n")
-    os.system("start http://www.google.com")
+    os.system("start data/index.html")
+    os.system("xdg-open data/index.html")
 
 
 
