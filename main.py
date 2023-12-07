@@ -1,7 +1,5 @@
 
 import tkinter as tk
-
-# print(2)
 import requests
 import os
 from time import localtime
