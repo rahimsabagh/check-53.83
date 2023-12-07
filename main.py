@@ -61,9 +61,7 @@ def ip_list(iprange, y_start, y_end):
     if y_start  == "": y_start = 0
     if y_end == "": y_end = 255
     with open("data/index.html", "w") as T:
-        T.write(f'''<a href="unknown.html">unknown</a> 
-                    <a href="log.txt">log</a>
-                    <a href="ips.txt">ip's</a><br/>
+        T.write( '''<style>*{text-align: center;color: aliceblue;background-color: black;}</style>\n<a href="unknown.html">unknown</a>\n<a href="log.txt">log</a>\n<a href="ips.txt">ip's</a> \n<br/>
                 ''')
         T.close()
     # clear file
