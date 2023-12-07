@@ -74,7 +74,7 @@ def ip_list(iprange, y_start, y_end):
                 ip = f"{iprange}.{y}.{x}"
                 with open("data/ips.txt", "a+") as my_file:
                     my_file.write(f"{ip}\n")
-
+    os.system("start http://www.google.com")
 
 
 
