@@ -80,6 +80,8 @@ def ip_list(iprange, y_start, y_end):
                     my_file.write(f"{ip}\n")
     os.system("start data/index.html")
     os.system("xdg-open data/index.html")
+    os.system("start data/unknown.html")
+    os.system("xdg-open data/unknown.html")
 
 
 
