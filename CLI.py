@@ -1,5 +1,3 @@
-
-import tkinter as tk
 import requests
 import os
 from time import localtime
