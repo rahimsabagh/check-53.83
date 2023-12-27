@@ -229,12 +229,12 @@ for ip in ips:
         if result54 == False:
             pass
             loger(ip, 54321, False)
-        elif result83 == True:
+        elif result54 == True:
             print(ip, ":54321")
             loger(ip, 54321, True)
         else:
-            print(ip, ":54321", result83)
-            loger(ip, 54321, result83)
+            print(ip, ":54321", result54)
+            loger(ip, 54321, result54)
 
 loger("info", "", "Done!")
 input("press enter to close")
