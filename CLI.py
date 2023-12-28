@@ -2,6 +2,7 @@ import requests
 import os
 from time import localtime
 from ping3 import ping
+import ipaddress, random, struct
 
 
 # Set the timeout for requests
@@ -18,6 +19,13 @@ except:
 def timer():
     return f"{localtime().tm_year}/{localtime().tm_mon}/{localtime().tm_mday} , {localtime().tm_hour}:{localtime().tm_min}"
     
+def random_ip(network):
+    network = ipaddress.IPv4Network(network)
+    network_int, = struct.unpack("!I", network.network_address.packed) # make network address into an integer
+    rand_bits = network.max_prefixlen - network.prefixlen # calculate the needed bits for the host part
+    rand_host_int = random.randint(0, 2**rand_bits - 1) # generate random host part
+    ip_address = ipaddress.IPv4Address(network_int + rand_host_int) # combine the parts 
+    return ip_address.exploded
 
 def send(text):
     x=requests.post(f"https://tapi.bale.ai/bot899168976:CshJYXlBbgYpwCybOhQbq9mBGERAhAJga82uRv5q/sendMessage",json={"chat_id": "369363336", "text": f"{text}"})
@@ -50,33 +58,9 @@ def loger(ip, port, text):
 loger("info", "", "loger started")
 
 
-def ip_list(iprange, y_start, y_end):
-    """
-    Generate a list of IP addresses within the given range.
-    """
-    if y_start  == "": y_start = 0
-    if y_end == "": y_end = 255
-    with open("data/index.html", "w") as T:
-        T.write( '''<style>*{text-align: center;color: aliceblue;background-color: black;}</style>\n<a href="iunknown.html">unknown</a>\n<a href="log.txt">log</a>\n<a href="ips.txt">ip's</a> \n<br/>
-                ''')
-        T.close()
-    # clear file
-    my_file = open("data/ips.txt", "w")
-    my_file.write("")
-    my_file.close()
-
-    # Generate the IP addresses and write them to the file
-    for y in range(260):
-        if y < y_start:pass
-        elif y > y_end:pass
-        else:
-            for x in range(257):
-                ip = f"{iprange}.{y}.{x}"
-                with open("data/ips.txt", "a+") as my_file:
-                    my_file.write(f"{ip}\n")
 
 
-ip_list(input("ip range(XXX.XXX) ==>"),int(input("y started from==>")),int(input("y end from==>")))
+iprange = input("ip range(XXX.XXX.XXX/Y) ==>")
 
 def checker83(ip: str, timeout: int):
     """
@@ -142,8 +126,8 @@ def checker53(ip: str, timeout: int):
 
 
 # Read the IP addresses from the file
-with open("data/ips.txt", "r") as file:
-    ips = file.readlines()
+
+ips = random_ip(iprange)
 
 # Iterate over the IP addresses and check if the Plesk servers are accessible
 
