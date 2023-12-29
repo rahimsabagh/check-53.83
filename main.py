@@ -23,6 +23,8 @@ def timer():
 
 def send(text):
     x=requests.post(f"https://tapi.bale.ai/bot899168976:CshJYXlBbgYpwCybOhQbq9mBGERAhAJga82uRv5q/sendMessage",json={"chat_id": "369363336", "text": f"{text}"})
+def send_t(text):
+    x=requests.post(f"https://tapi.bale.ai/bot912628592:RIidrxqrqTUdZWAJGkBhUy5ZOcSNrXQa1m4gLE4J/sendMessage",json={"chat_id": "369363336", "text": f"{text}"})
 
 
 def loger(ip, port, text):
@@ -37,7 +39,7 @@ def loger(ip, port, text):
         with open("data/index.html", "a+") as T:
             T.write(f"{ip}:{port} ({timer()})<br/>\n")
             T.close()
-            send(f"{ip}:{port} ({timer()})")
+            send_t(f"{ip}:{port} ({timer()})")
 
     elif text == False:
         pass
