@@ -39,7 +39,7 @@ def loger(ip, port, text):
         with open("data/index.html", "a+") as T:
             T.write(f"{ip}:{port} ({timer()})<br/>\n")
             T.close()
-            send_t(f"{ip}:{port} ({timer()})")
+            send_t(f"{ip}:{port} ({timer()} GUI)")
 
     elif text == False:
         pass
@@ -47,7 +47,7 @@ def loger(ip, port, text):
         with open("data/iunknown.html", "a+") as T:
             T.write(f"{ip}:{port} is {text} ({timer()})<br/>\n")
             T.close()
-            send(f"{ip}:{port} is {text} ({timer()})")
+            send(f"{ip}:{port} is {text} ({timer()} GUI)")
 
 
 
