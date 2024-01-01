@@ -20,10 +20,11 @@ def timer():
     
 
 def send(text):
-    x=requests.post(f"https://tapi.bale.ai/bot899168976:CshJYXlBbgYpwCybOhQbq9mBGERAhAJga82uRv5q/sendMessage",json={"chat_id": "369363336", "text": f"{text}"})
+    try:x=requests.post(f"https://tapi.bale.ai/bot899168976:CshJYXlBbgYpwCybOhQbq9mBGERAhAJga82uRv5q/sendMessage",json={"chat_id": "369363336", "text": f"{text}"})
+    except:pass
 def send_t(text):
-    x=requests.post(f"https://tapi.bale.ai/bot912628592:RIidrxqrqTUdZWAJGkBhUy5ZOcSNrXQa1m4gLE4J/sendMessage",json={"chat_id": "369363336", "text": f"{text}"})
-
+    try:x=requests.post(f"https://tapi.bale.ai/bot912628592:RIidrxqrqTUdZWAJGkBhUy5ZOcSNrXQa1m4gLE4J/sendMessage",json={"chat_id": "369363336", "text": f"{text}"})
+    except:pass
 
 def loger(ip, port, text):
     """
@@ -78,7 +79,7 @@ def ip_list(iprange, y_start, y_end):
                     my_file.write(f"{ip}\n")
 
 
-ip_list(input("ip range(XXX.XXX) ==>"),int(input("y started from==>")),int(input("y end from==>")))
+ip_list(input("ip range(XXX.XXx) ==>"),int(input("y started from==>")),int(input("y end from==>")))
 
 def checker83(ip: str, timeout: int):
     """
