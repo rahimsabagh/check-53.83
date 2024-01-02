@@ -186,6 +186,7 @@ for ip in ips:
         else:
             print(ip, ":54321", result54)
             loger(ip, 54321, result54)
+    else:loger(ip,"ping none",False)
 
 loger("info", "", "Done!")
 input("press enter to close")
