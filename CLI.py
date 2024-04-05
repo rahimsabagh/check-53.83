@@ -81,12 +81,12 @@ def ip_list(iprange, y_start, y_end):
 
 ip_list(input("ip range(XXX.XXX) ==>"),int(input("y started from==>")),int(input("y end from==>")))
 
-def checker83(ip: str, timeout: int):
+def checker(ip: str, timeout: int, port : int):
     """
     Check if the Plesk server at the given IP address and port 2083 is accessible.
     """
     try:
-        url = f"http://{ip}:2083/login"
+        url = f"http://{ip}:{port}/login"
 
         data = {'username': 'admin', 'password': 'admin'}
 
@@ -101,47 +101,6 @@ def checker83(ip: str, timeout: int):
     except:
         return False
 
-
-def checker54(ip: str, timeout: int):
-    """
-    Check if the Plesk server at the given IP address and port 54321 is accessible.
-    """
-    try:
-        url = f"http://{ip}:54321/login"
-
-        data = {'username': 'admin', 'password': 'admin'}
-
-        response = requests.post(url, data, timeout=timeout)
-
-        response_json = response.json()
-
-        if response_json["success"]:
-            return True
-        else:
-            return response_json['msg']
-    except:
-        return False
-
-
-def checker53(ip: str, timeout: int):
-    """
-    Check if the Plesk server at the given IP address and port 2053 is accessible.
-    """
-    try:
-        url = f"http://{ip}:2053/login"
-
-        data = {'username': 'admin', 'password': 'admin'}
-
-        response = requests.post(url, data, timeout=timeout)
-
-        response_json = response.json()
-
-        if response_json["success"]:
-            return True
-        else:
-            return response_json['msg']
-    except:
-        return False
 
 
 # Read the IP addresses from the file
@@ -153,34 +112,34 @@ with open("data/ips.txt", "r") as file:
 for ip in ips:
     ip = ip.strip()
     if ping(ip,1) != None:
-        result53 = checker53(ip, timeout)
-        result83 = checker83(ip, timeout)
-        result54 = checker54(ip, timeout)
+        result53 = checker(ip, timeout, 2053)
+        result83 = checker(ip, timeout, 2083)
+        result54 = checker(ip, timeout, 54321)
 
-        if result53 == False:
+        if  checker(ip, timeout, 2053) == False:
             pass
             loger(ip, 2053, False)
-        elif result53 == True:
+        elif checker(ip, timeout, 2053) == True:
             print(ip, ":2053")
             loger(ip, 2053, True)
         else:
             print(ip, ":2053", result53)
             loger(ip, 2053, result53)
 
-        if result83 == False:
+        if checker(ip, timeout, 2083) == False:
             pass
             loger(ip, 2083, False)
-        elif result83 == True:
+        elif checker(ip, timeout, 2083) == True:
             print(ip, ":2083")
             loger(ip, 2083, True)
         else:
             print(ip, ":2083", result83)
             loger(ip, 2083, result83)
 
-        if result54 == False:
+        if checker(ip, timeout, 54321) == False:
             pass
             loger(ip, 54321, False)
-        elif result54 == True:
+        elif checker(ip, timeout, 54321) == True:
             print(ip, ":54321")
             loger(ip, 54321, True)
         else:
