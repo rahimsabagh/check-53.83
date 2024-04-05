@@ -116,30 +116,30 @@ for ip in ips:
         result83 = checker(ip, timeout, 2083)
         result54 = checker(ip, timeout, 54321)
 
-        if  checker(ip, timeout, 2053) == False:
+        if result53 == False:
             pass
             loger(ip, 2053, False)
-        elif checker(ip, timeout, 2053) == True:
+        elif result53 == True:
             print(ip, ":2053")
             loger(ip, 2053, True)
         else:
             print(ip, ":2053", result53)
             loger(ip, 2053, result53)
 
-        if checker(ip, timeout, 2083) == False:
+        if result83 == False:
             pass
             loger(ip, 2083, False)
-        elif checker(ip, timeout, 2083) == True:
+        elif result83 == True:
             print(ip, ":2083")
             loger(ip, 2083, True)
         else:
             print(ip, ":2083", result83)
             loger(ip, 2083, result83)
 
-        if checker(ip, timeout, 54321) == False:
+        if result54 == False:
             pass
             loger(ip, 54321, False)
-        elif checker(ip, timeout, 54321) == True:
+        elif result54 == True:
             print(ip, ":54321")
             loger(ip, 54321, True)
         else:
