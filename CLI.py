@@ -117,35 +117,27 @@ for ip in ips:
         result54 = checker(ip, timeout, 54321)
 
         if result53 == False:
-            pass
             loger(ip, 2053, False)
         elif result53 == True:
-            print(ip, ":2053")
             loger(ip, 2053, True)
         else:
-            print(ip, ":2053", result53)
             loger(ip, 2053, result53)
 
         if result83 == False:
-            pass
             loger(ip, 2083, False)
         elif result83 == True:
-            print(ip, ":2083")
             loger(ip, 2083, True)
         else:
-            print(ip, ":2083", result83)
             loger(ip, 2083, result83)
 
         if result54 == False:
             pass
             loger(ip, 54321, False)
         elif result54 == True:
-            print(ip, ":54321")
             loger(ip, 54321, True)
         else:
-            print(ip, ":54321", result54)
             loger(ip, 54321, result54)
     else:loger(ip,"ping none",False)
 
 loger("info", "", "Done!")
-input("press enter to close")
+input("press enter to close\n result in data/ips.txt")
