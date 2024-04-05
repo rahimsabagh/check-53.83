@@ -1,6 +1,6 @@
 import requests
 import os
-from time import localtime
+from time import localtime,time
 from ping3 import ping
 
 
@@ -8,7 +8,7 @@ from ping3 import ping
 # please set by network status
 timeout = 2
 
-
+time1 = time()
 try:
     os.mkdir("data")
 except:
@@ -139,5 +139,7 @@ for ip in ips:
             loger(ip, 54321, result54)
     else:loger(ip,"ping none",False)
 
+time2 = time()
+
 loger("info", "", "Done!")
-input("press enter to close\n result in data/ips.txt")
+input(f"press enter to close\n result in data folder \n The time it took to complete:{time2-time1} second")
