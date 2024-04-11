@@ -1,14 +1,14 @@
 import requests
 import os
-from time import localtime
+from time import localtime,time
 from ping3 import ping
 
 
 # Set the timeout for requests
 # please set by network status
-timeout = 2
+timeout = 0.5
 
-
+time1 = time()
 try:
     os.mkdir("data")
 except:
@@ -38,7 +38,7 @@ def loger(ip, port, text):
         with open("data/index.html", "a+") as T:
             T.write(f"{ip}:{port} ({timer()})<br/>\n")
             T.close()
-            send_t(f"{ip}:{port} ({timer()} CLI)")
+            send_t(f"http://{ip}:{port} ({timer()} CLI)")
 
     elif text == False:
         pass
@@ -46,7 +46,7 @@ def loger(ip, port, text):
         with open("data/iunknown.html", "a+") as T:
             T.write(f"{ip}:{port} is {text} ({timer()})<br/>\n")
             T.close()
-            send(f"{ip}:{port} is {text} ({timer()} CLI)")
+            send(f"http://{ip}:{port} is {text} ({timer()} CLI)")
 
 
 
@@ -81,12 +81,12 @@ def ip_list(iprange, y_start, y_end):
 
 ip_list(input("ip range(XXX.XXX) ==>"),int(input("y started from==>")),int(input("y end from==>")))
 
-def checker83(ip: str, timeout: int):
+def checker(ip: str, timeout: int, port : int):
     """
     Check if the Plesk server at the given IP address and port 2083 is accessible.
     """
     try:
-        url = f"http://{ip}:2083/login"
+        url = f"http://{ip}:{port}/login"
 
         data = {'username': 'admin', 'password': 'admin'}
 
@@ -101,47 +101,6 @@ def checker83(ip: str, timeout: int):
     except:
         return False
 
-
-def checker54(ip: str, timeout: int):
-    """
-    Check if the Plesk server at the given IP address and port 54321 is accessible.
-    """
-    try:
-        url = f"http://{ip}:54321/login"
-
-        data = {'username': 'admin', 'password': 'admin'}
-
-        response = requests.post(url, data, timeout=timeout)
-
-        response_json = response.json()
-
-        if response_json["success"]:
-            return True
-        else:
-            return response_json['msg']
-    except:
-        return False
-
-
-def checker53(ip: str, timeout: int):
-    """
-    Check if the Plesk server at the given IP address and port 2053 is accessible.
-    """
-    try:
-        url = f"http://{ip}:2053/login"
-
-        data = {'username': 'admin', 'password': 'admin'}
-
-        response = requests.post(url, data, timeout=timeout)
-
-        response_json = response.json()
-
-        if response_json["success"]:
-            return True
-        else:
-            return response_json['msg']
-    except:
-        return False
 
 
 # Read the IP addresses from the file
@@ -153,40 +112,34 @@ with open("data/ips.txt", "r") as file:
 for ip in ips:
     ip = ip.strip()
     if ping(ip,1) != None:
-        result53 = checker53(ip, timeout)
-        result83 = checker83(ip, timeout)
-        result54 = checker54(ip, timeout)
+        result53 = checker(ip, timeout, 2053)
+        result83 = checker(ip, timeout, 2083)
+        result54 = checker(ip, timeout, 54321)
 
         if result53 == False:
-            pass
             loger(ip, 2053, False)
         elif result53 == True:
-            print(ip, ":2053")
             loger(ip, 2053, True)
         else:
-            print(ip, ":2053", result53)
             loger(ip, 2053, result53)
 
         if result83 == False:
-            pass
             loger(ip, 2083, False)
         elif result83 == True:
-            print(ip, ":2083")
             loger(ip, 2083, True)
         else:
-            print(ip, ":2083", result83)
             loger(ip, 2083, result83)
 
         if result54 == False:
             pass
             loger(ip, 54321, False)
         elif result54 == True:
-            print(ip, ":54321")
             loger(ip, 54321, True)
         else:
-            print(ip, ":54321", result54)
             loger(ip, 54321, result54)
     else:loger(ip,"ping none",False)
 
+time2 = time()
+
 loger("info", "", "Done!")
-input("press enter to close")
+input(f"press enter to close\n result in data folder \n The time it took to complete:{time2-time1} second")
