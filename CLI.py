@@ -6,7 +6,7 @@ from ping3 import ping
 
 # Set the timeout for requests
 # please set by network status
-timeout = 2
+timeout = 0.5
 
 time1 = time()
 try:
