@@ -73,7 +73,7 @@ def ip_list(iprange, y_start, y_end):
         if y < y_start:pass
         elif y > y_end:pass
         else:
-            for x in range(257):
+            for x in range(256):
                 ip = f"{iprange}.{y}.{x}"
                 with open("data/ips.txt", "a+") as my_file:
                     my_file.write(f"{ip}\n")
