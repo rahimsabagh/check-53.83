@@ -57,8 +57,7 @@ def ip_list(iprange, y_start, y_end):
     """
     Generate a list of IP addresses within the given range.
     """
-    if y_start  == "": y_start = 0
-    if y_end == "": y_end = 255
+    
     with open("data/index.html", "w") as T:
         T.write( '''<style>*{text-align: center;color: aliceblue;background-color: black;}</style>\n<a href="iunknown.html">unknown</a>\n<a href="log.txt">log</a>\n<a href="ips.txt">ip's</a> \n<br/>
                 ''')
