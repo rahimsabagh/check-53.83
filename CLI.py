@@ -69,7 +69,8 @@ def ip_list(iprange, y_start, y_end):
     my_file.close()
 
     # Generate the IP addresses and write them to the file
-    for y in range(260):
+    for y in range(260): 
+        y = y+1
         if y < y_start:pass
         elif y > y_end:pass
         else:
