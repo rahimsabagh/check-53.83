@@ -46,7 +46,7 @@ def loger(ip, port, text):
         with open("data/iunknown.html", "a+") as T:
             T.write(f"{ip}:{port} is {text} ({timer()})<br/>\n")
             T.close()
-            send(f"http://{ip}:{port} is {text} ({timer()} CLI)")
+            send(f"{ip}:{port} is {text} ({timer()} CLI)")
 
 
 
