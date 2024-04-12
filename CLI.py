@@ -79,7 +79,7 @@ def ip_list(iprange, y_start, y_end):
                     my_file.write(f"{ip}\n")
 
 
-ip_list(input("ip range(XXX.XXX) ==>"),int(input("y started from==>")),int(input("y end from==>")))
+ip_list(input("ip range(CXX.XXX) ==>"),int(input("y started from==>")),int(input("y end from==>")))
 
 def checker(ip: str, timeout: int, port : int):
     """
