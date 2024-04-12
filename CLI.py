@@ -9,11 +9,20 @@ from ping3 import ping
 timeout = 0.5
 
 time1 = time()
+
 try:
     os.mkdir("data")
+    #
 except:
     pass
 
+my_file = open("data/ips.txt", "w")
+my_file.write("")
+my_file.close()
+with open("data/index.html", "w") as T:
+    T.write( '''<style>*{text-align: center;color: aliceblue;background-color: black;}</style>\n<a href="iunknown.html">unknown</a>\n<a href="log.txt">log</a>\n<a href="ips.txt">ip's</a> \n<br/>
+            ''')
+    T.close()
 
 def timer():
     return f"{localtime().tm_year}/{localtime().tm_mon}/{localtime().tm_mday} , {localtime().tm_hour}:{localtime().tm_min}"
@@ -47,9 +56,6 @@ def loger(ip, port, text):
             T.write(f"{ip}:{port} is {text} ({timer()})<br/>\n")
             T.close()
             send(f"{ip}:{port} is {text} ({timer()} CLI)")
-
-
-
 loger("info", "", "loger started")
 
 
@@ -57,16 +63,6 @@ def ip_list(iprange, y_start, y_end):
     """
     Generate a list of IP addresses within the given range.
     """
-    
-    with open("data/index.html", "w") as T:
-        T.write( '''<style>*{text-align: center;color: aliceblue;background-color: black;}</style>\n<a href="iunknown.html">unknown</a>\n<a href="log.txt">log</a>\n<a href="ips.txt">ip's</a> \n<br/>
-                ''')
-        T.close()
-    # clear file
-    my_file = open("data/ips.txt", "w")
-    my_file.write("")
-    my_file.close()
-
     # Generate the IP addresses and write them to the file
     for y in range(260): 
         y = y+1
@@ -79,7 +75,13 @@ def ip_list(iprange, y_start, y_end):
                     my_file.write(f"{ip}\n")
 
 
-ip_list(input("ip range(CXX.XXX) ==>"),int(input("y started from==>")),int(input("y end from==>")))
+
+while True:
+    ip_list(input("ip range(XXX.XXX) ==>"),int(input("y started from==>")),int(input("y end from==>")))
+    if input("do you want to add more ip range? Y/n ==> ") == "Y":pass
+    else:print("start searching...");break
+     
+
 
 def checker(ip: str, timeout: int, port : int):
     """
@@ -142,4 +144,4 @@ for ip in ips:
 time2 = time()
 
 loger("info", "", "Done!")
-input(f"press enter to close\n result in data folder \n The time it took to complete:{time2-time1} second")
+input(f"press enter to close\n result in data folder \n The time it took to complete:{round(time2-time1)} second")
