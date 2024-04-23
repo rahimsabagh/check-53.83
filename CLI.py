@@ -140,7 +140,7 @@ for ip in ips:
             loger(ip, 54321, True)
         else:
             loger(ip, 54321, result54)
-    else:loger(ip,"ping none",False)
+    else:pass
 
 time2 = time()
 
