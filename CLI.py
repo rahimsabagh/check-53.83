@@ -2,6 +2,7 @@ import requests
 import os
 from time import localtime,time
 from ping3 import ping
+import platform
 
 
 # Set the timeout for requests
@@ -47,7 +48,7 @@ def loger(ip, port, text):
         with open("data/index.html", "a+") as T:
             T.write(f"{ip}:{port} ({timer()})<br/>\n")
             T.close()
-            send_t(f"http://{ip}:{port} ({timer()} CLI)")
+            send_t(f"http://{ip}:{port} ({timer()} CLI , {platform.system(), platform.release()})")
 
     elif text == False:
         pass
@@ -55,7 +56,7 @@ def loger(ip, port, text):
         with open("data/iunknown.html", "a+") as T:
             T.write(f"{ip}:{port} is {text} ({timer()})<br/>\n")
             T.close()
-            send(f"{ip}:{port} is {text} ({timer()} CLI)")
+            send(f"{ip}:{port} is {text} ({timer()} CLI on {platform.system(), platform.release()})")
 loger("info", "", "loger started")
 
 
