@@ -8,7 +8,7 @@ import platform
 # Set the timeout for requests
 # please set by network status
 timeout = 0.5
-xkncksncv
+
 
 time1 = time()
 
