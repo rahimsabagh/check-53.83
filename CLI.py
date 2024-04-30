@@ -49,7 +49,7 @@ def loger(ip, port, text):
             send_t(f"http://{ip}:{port} ({timer()} CLI , {platform.system(), platform.release()})")
 
         with open("data/true.txt", "a+") as T2:
-            T2.write(f"{ip}:{port}")
+            T2.write(f"{ip}:{port}\n")
             T2.close()
 
     elif text == False:
