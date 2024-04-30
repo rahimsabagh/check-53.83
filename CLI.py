@@ -63,9 +63,7 @@ loger("info", "", "loger started")
 
 
 def ip_list(iprange, y_start, y_end):
-    my_file = open("data/ips.txt", "w")
-    my_file.write("")
-    my_file.close()
+
     for y in range(260): 
         y = y+1
         if y < y_start:pass
@@ -78,6 +76,9 @@ def ip_list(iprange, y_start, y_end):
 
 
 if input("create newip range?(y/n)==> ").upper() == "Y":
+    my_file = open("data/ips.txt", "w")
+    my_file.write("")
+    my_file.close()
     while True:
         ip_list(input("ip range(XXX.XXX) ==>"),int(input("y started from==>")),int(input("y end from==>")))
         if input("do you want to add more ip range? Y/n ==> ").upper() == "Y":pass
