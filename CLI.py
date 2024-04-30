@@ -83,7 +83,7 @@ if input("create newip range?(y/n)==> ").upper() == "Y":
         ip_list(input("ip range(XXX.XXX) ==>"),int(input("y started from==>")),int(input("y end from==>")))
         if input("do you want to add more ip range? Y/n ==> ").upper() == "Y":pass
         else:print("start searching...");break
-else:pass
+else:print("start searching...")
 
 
 def checker(ip: str, timeout: int, port : int):
