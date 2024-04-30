@@ -77,10 +77,10 @@ def ip_list(iprange, y_start, y_end):
                     my_file.write(f"{ip}\n")
 
 
-if input("create newip range?(y/n)==> ").upper == "Y":
+if input("create newip range?(y/n)==> ").upper() == "Y":
     while True:
         ip_list(input("ip range(XXX.XXX) ==>"),int(input("y started from==>")),int(input("y end from==>")))
-        if input("do you want to add more ip range? Y/n ==> ").upper == "Y":pass
+        if input("do you want to add more ip range? Y/n ==> ").upper() == "Y":pass
         else:print("start searching...");break
 else:pass
 
