@@ -115,7 +115,7 @@ with open("data/ips.txt", "r") as file:
 
 for ip in ips:
     ip = ip.strip()
-    if ping(ip,0.5) != None:
+    if ping(ip,timeout) != None:
         result53 = checker(ip, timeout, 2053)
         result83 = checker(ip, timeout, 2083)
         result54 = checker(ip, timeout, 54321)
