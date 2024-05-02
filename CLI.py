@@ -74,7 +74,7 @@ def ip_list(iprange, y_start, y_end):
                     my_file.write(f"{ip}\n")
 
 
-if input("create newip range?(y/n)==> ").upper() == "Y":
+if input("#Toomaj\ncreate newip range?(y/n)==> ").upper() == "Y":
     my_file = open("data/ips.txt", "w")
     my_file.write("")
     my_file.close()
