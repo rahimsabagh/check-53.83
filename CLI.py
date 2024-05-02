@@ -18,7 +18,7 @@ except:
     pass
 
 
-with open("data/index.html", "w") as T:
+with open("data/index.html", "a") as T:
     T.write('<style>*{text-align: center;color: aliceblue;background-color: black;}</style>\n<a href="iunknown.html">unknown</a>\n<a href="log.txt">log</a>\n<a href="ips.txt">ips</a> \n<a href="true.txt">true</a>\n<br/>')
     T.close()
 
