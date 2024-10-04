@@ -118,7 +118,7 @@ for ip in ips:
     if ping(ip,timeout) != None:
         result53 = checker(ip, timeout, 2053)
         result83 = checker(ip, timeout, 2083)
-        result54 = checker(ip, timeout, 54321)
+        # result54 = checker(ip, timeout, 54321)
 
         if result53 == False:
             loger(ip, 2053, False)
@@ -134,13 +134,13 @@ for ip in ips:
         else:
             loger(ip, 2083, result83)
 
-        if result54 == False:
-            pass
-            loger(ip, 54321, False)
-        elif result54 == True:
-            loger(ip, 54321, True)
-        else:
-            loger(ip, 54321, result54)
+        # if result54 == False:
+            # pass
+            # loger(ip, 54321, False)
+        # elif result54 == True:
+            # loger(ip, 54321, True)
+        # else:
+            # loger(ip, 54321, result54)
     else:pass
 
 time2 = time()
