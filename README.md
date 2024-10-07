@@ -12,10 +12,7 @@ then run [main.py](https://github.com/rahimsabagh/check-Rahim53-83/blob/main/mai
 ```
 python3 <(curl -Ls https://raw.githubusercontent.com/rahimsabagh/check-53.83/main/CLI.py)
 ```
-**for other's (GUI):**
-```
-python3 <(curl -Ls https://raw.githubusercontent.com/rahimsabagh/check-53.83/main/main.py)
-```
+
 
 
 # checker for 53/83/54
