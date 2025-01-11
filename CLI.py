@@ -90,7 +90,7 @@ if input("#Toomaj\ncreate newip range?(y/n)==> ").upper() == "Y":
     my_file.write("")
     my_file.close()
     while True:
-        ip_range(input("first ip (X.X.X.X) ==>"),int(input("Last ip (X.X.X.X)==>")))
+        ip_range(input("first ip (X.X.X.X) ==>"),(input("Last ip (X.X.X.X)==>")))
         if input("do you want to add more ip range? Y/n ==> ").upper() == "Y":pass
         else:print("start searching...");break
 else:print("start searching...")
