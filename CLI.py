@@ -61,17 +61,28 @@ def loger(ip, port, text):
 loger("info", "", "loger started")
 
 
-def ip_list(iprange, y_start, y_end):
+def ip_to_int(ip):
+    parts = list(map(int, ip.split('.')))
+    return (parts[0] << 24) + (parts[1] << 16) + (parts[2] << 8) + parts[3]
 
-    for y in range(260): 
-        y = y+1
-        if y < y_start:pass
-        elif y > y_end:pass
-        else:
-            for x in range(256):
-                ip = f"{iprange}.{y}.{x}"
-                with open("data/ips.txt", "a+") as my_file:
-                    my_file.write(f"{ip}\n")
+def int_to_ip(num):
+    return f"{(num >> 24) & 255}.{(num >> 16) & 255}.{(num >> 8) & 255}.{num & 255}"
+
+def ip_range(ip1, ip2):
+    try:
+        start = ip_to_int(ip1)
+        end = ip_to_int(ip2)
+        
+        if start > end:
+            start, end = end, start
+        
+        for num in range(start, end + 1):
+            ip = int_to_ip(num)
+            with open("data/ips.txt", "a+") as my_file:
+              my_file.write(f"{ip}\n")
+    except ValueError:
+        print("ip invalid")
+
 
 
 if input("#Toomaj\ncreate newip range?(y/n)==> ").upper() == "Y":
@@ -79,7 +90,7 @@ if input("#Toomaj\ncreate newip range?(y/n)==> ").upper() == "Y":
     my_file.write("")
     my_file.close()
     while True:
-        ip_list(input("ip range(XXX.XXX) ==>"),int(input("y started from==>")),int(input("y end from==>")))
+        ip_range(input("first ip (X.X.X.X) ==>"),int(input("Last ip (X.X.X.X)==>")))
         if input("do you want to add more ip range? Y/n ==> ").upper() == "Y":pass
         else:print("start searching...");break
 else:print("start searching...")
