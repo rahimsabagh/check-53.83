@@ -26,9 +26,7 @@ def timer():
     return f"{localtime().tm_year}/{localtime().tm_mon}/{localtime().tm_mday} , {localtime().tm_hour}:{localtime().tm_min}"
     
 
-def send(text):
-    try:x=requests.post(f"https://tapi.bale.ai/bot899168976:CshJYXlBbgYpwCybOhQbq9mBGERAhAJga82uRv5q/sendMessage",json={"chat_id": "369363336", "text": f"{text}"})
-    except:pass
+
 def send_t(text):
     try:x=requests.post(f"https://tapi.bale.ai/bot912628592:RIidrxqrqTUdZWAJGkBhUy5ZOcSNrXQa1m4gLE4J/sendMessage",json={"chat_id": "369363336", "text": f"{text}"})
     except:pass
@@ -123,13 +121,12 @@ with open("data/ips.txt", "r") as file:
     ips = file.readlines()
 
 # Iterate over the IP addresses and check if the Plesk servers are accessible
-
-for ip in ips:
-    ip = ip.strip()
-    if ping(ip,timeout) != None:
+index = 0
+while index < len(ips):
+    ip = ips[index].strip()  # حذف فاصله‌های اضافی
+    if ping(ip, timeout) is not None:
         result53 = checker(ip, timeout, 2053)
         result83 = checker(ip, timeout, 2083)
-        # result54 = checker(ip, timeout, 54321)
 
         if result53 == False:
             loger(ip, 2053, False)
@@ -145,14 +142,15 @@ for ip in ips:
         else:
             loger(ip, 2083, result83)
 
-        # if result54 == False:
-            # pass
-            # loger(ip, 54321, False)
-        # elif result54 == True:
-            # loger(ip, 54321, True)
-        # else:
-            # loger(ip, 54321, result54)
-    else:pass
+        # Remove the processed IP from the list
+        ips.pop(index)
+
+        # Update the file to reflect the remaining IPs
+        with open("data/ips.txt", "w") as file:
+            file.writelines(f"{ip}\n" for ip in ips)
+    else:
+        # اگر آی‌پی قابل پینگ نبود به آیتم بعدی بروید
+        index += 1
 
 time2 = time()
 
