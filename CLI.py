@@ -128,7 +128,6 @@ while index < len(ips):
     ip = ips[index].strip()  # حذف فاصله‌های اضافی
     if ping(ip, timeout) is not None:
         result53 = checker(ip, timeout, 2053)
-        result83 = checker(ip, timeout, 2083)
 
         if result53 == False:
             loger(ip, 2053, False)
@@ -136,14 +135,6 @@ while index < len(ips):
             loger(ip, 2053, True)
         else:
             loger(ip, 2053, result53)
-
-        if result83 == False:
-            loger(ip, 2083, False)
-        elif result83 == True:
-            loger(ip, 2083, True)
-        else:
-            loger(ip, 2083, result83)
-
         # Remove the processed IP from the list
         ips.pop(index)
 
