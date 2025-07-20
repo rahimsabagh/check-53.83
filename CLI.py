@@ -123,6 +123,9 @@ if inp == 1:
         if input("do you want to add more ip range? Y/n ==> ").upper() == "Y":pass
         else:break
 elif inp == 2 :
+    my_file = open("data/ips.txt", "w")
+    my_file.write("")
+    my_file.close()
     AS_NUMBER = input("Enter as number (ASx) ==>")
     OUTPUT_FILE = "data/ips.txt"
     print(f"receving ip from {AS_NUMBER} ...")
