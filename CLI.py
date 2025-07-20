@@ -3,11 +3,13 @@ import os
 from time import localtime,time
 from ping3 import ping
 import platform
+import ipaddress
+
 
 
 # Set the timeout for requests
 # please set by network status
-timeout = 0.5
+timeout = 1
 
 
 time1 = time()
@@ -20,6 +22,10 @@ except:
 
 with open("data/index.html", "a") as T:
     T.write('<style>*{text-align: center;color: aliceblue;background-color: black;}</style>\n<a href="iunknown.html">unknown</a>\n<a href="log.txt">log</a>\n<a href="ips.txt">ips</a> \n<a href="true.txt">true</a>\n<br/>')
+    T.close()
+
+with open("data/ips.txt", "a+") as T:
+    T.write('')
     T.close()
 
 def timer():
@@ -60,6 +66,28 @@ def loger(ip, port, text):
             send(f"{ip}:{port} is {text} ({timer()} CLI on {platform.system(), platform.release()})")
 loger("info", "", "loger started")
 
+def get_ip_ranges_from_as(as_number):
+    url = f"https://api.bgpview.io/asn/{as_number}/prefixes"
+    response = requests.get(url)
+    if response.status_code != 200:
+        print("خطا در دریافت اطلاعات")
+        return []
+
+    data = response.json()
+    prefixes = data.get("data", {}).get("ipv4_prefixes", [])
+    return [p["prefix"] for p in prefixes]
+
+def save_ips_from_ranges(prefixes, filename):
+    with open(filename, "w") as f:
+        for prefix in prefixes:
+            try:
+                net = ipaddress.ip_network(prefix)
+                for ip in net.hosts():
+                    f.write(str(ip) + "\n")
+            except Exception as e:
+                print(f"خطا در پردازش {prefix}: {e}")
+
+
 
 def ip_to_int(ip):
     parts = list(map(int, ip.split('.')))
@@ -85,7 +113,8 @@ def ip_range(ip1, ip2):
 
 
 
-if input("#Toomaj\ncreate newip range?(y/n)==> ").upper() == "Y":
+inp = int(input("#Toomaj\n 1. create new ip range manually \n 2. create new ip range with AS \n 3. Continue with last ip range \n==>"))
+if inp == 1:
     my_file = open("data/ips.txt", "w")
     my_file.write("")
     my_file.close()
@@ -93,7 +122,28 @@ if input("#Toomaj\ncreate newip range?(y/n)==> ").upper() == "Y":
         ip_range(input("first ip (X.X.X.X) ==>"),(input("Last ip (X.X.X.X)==>")))
         if input("do you want to add more ip range? Y/n ==> ").upper() == "Y":pass
         else:print("start searching...");break
-else:print("start searching...")
+elif inp == 2 :
+    AS_NUMBER = input("Enter as number (ASx) ==>")
+    OUTPUT_FILE = "data/ips.txt"
+    print(f"receving ip from {AS_NUMBER} ...")
+    prefixes = get_ip_ranges_from_as(AS_NUMBER)
+    if prefixes:
+        print(f"{len(prefixes)} renges found, saving... ")
+        save_ips_from_ranges(prefixes, OUTPUT_FILE)
+        print(f"all ips saved to: {OUTPUT_FILE}.")
+        print("start searching...")
+    else:
+        print("nothing found")
+
+
+elif inp == 3 :
+    print("start searching...")
+
+else : print("wrong input")
+
+
+
+
 
 
 def checker(ip: str, timeout: int, port : int):
@@ -118,14 +168,12 @@ def checker(ip: str, timeout: int, port : int):
 
 
 
-# Read the IP addresses from the file
 with open("data/ips.txt", "r") as file:
     ips = file.readlines()
+    print("s")
 
-# Iterate over the IP addresses and check if the Plesk servers are accessible
-index = 0
-while index < len(ips):
-    ip = ips[index].strip()  # حذف فاصله‌های اضافی
+for ip in ips:
+    ip = ip.strip()
     if ping(ip, timeout) is not None:
         result53 = checker(ip, timeout, 2053)
 
@@ -135,15 +183,9 @@ while index < len(ips):
             loger(ip, 2053, True)
         else:
             loger(ip, 2053, result53)
-        # Remove the processed IP from the list
-        ips.pop(index)
 
-        # Update the file to reflect the remaining IPs
-        with open("data/ips.txt", "w") as file:
-            file.writelines(f"{ip}\n" for ip in ips)
-    else:
-        # اگر آی‌پی قابل پینگ نبود به آیتم بعدی بروید
-        index += 1
+
+
 
 time2 = time()
 
