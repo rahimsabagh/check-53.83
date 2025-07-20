@@ -1,6 +1,5 @@
 requests
 ping3
-requests
 time
 ping3
 platform
