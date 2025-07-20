@@ -1,7 +1,4 @@
 requests
 ping3
-time
-ping3
-platform
 ipaddress
 
