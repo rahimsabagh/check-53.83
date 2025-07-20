@@ -121,7 +121,7 @@ if inp == 1:
     while True:
         ip_range(input("first ip (X.X.X.X) ==>"),(input("Last ip (X.X.X.X)==>")))
         if input("do you want to add more ip range? Y/n ==> ").upper() == "Y":pass
-        else:print("start searching...");break
+        else:break
 elif inp == 2 :
     AS_NUMBER = input("Enter as number (ASx) ==>")
     OUTPUT_FILE = "data/ips.txt"
@@ -131,13 +131,12 @@ elif inp == 2 :
         print(f"{len(prefixes)} renges found, saving... ")
         save_ips_from_ranges(prefixes, OUTPUT_FILE)
         print(f"all ips saved to: {OUTPUT_FILE}.")
-        print("start searching...")
+
     else:
         print("nothing found")
 
 
-elif inp == 3 :
-    print("start searching...")
+elif inp == 3 :pass
 
 else : print("wrong input")
 
@@ -170,7 +169,9 @@ def checker(ip: str, timeout: int, port : int):
 
 with open("data/ips.txt", "r") as file:
     ips = file.readlines()
-    print("s")
+    print(f"Estimated time: {len(ips)}s")
+    print("start searching...")
+
 
 for ip in ips:
     ip = ip.strip()
