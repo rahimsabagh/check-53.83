@@ -4,6 +4,7 @@ from time import localtime,time
 from ping3 import ping
 import platform
 import ipaddress
+import tqdm
 
 
 
@@ -176,7 +177,7 @@ with open("data/ips.txt", "r") as file:
     print("start searching...")
 
 
-for ip in ips:
+for ip in tqdm(ips):
     ip = ip.strip()
     if ping(ip, timeout) is not None:
         result53 = checker(ip, timeout, 2053)
