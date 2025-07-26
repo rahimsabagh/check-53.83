@@ -4,7 +4,8 @@ from time import localtime,time
 from ping3 import ping
 import platform
 import ipaddress
-import tqdm
+
+from tqdm import tqdm
 
 
 
