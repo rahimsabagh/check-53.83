@@ -6,7 +6,7 @@ import platform
 import ipaddress
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor
-
+from collections import deque
 
 
 # Set the timeout for requests
@@ -138,8 +138,6 @@ def convert_seconds(seconds):
     seconds %= 60
     return f"{days} days, {hours} hours, {minutes} minutes, {seconds} seconds"
 
-# Example:
-print(convert_seconds(539885))
 
 def ip_range(ip1, ip2):
     try:
@@ -232,27 +230,38 @@ def scan_ip(ip):
         result = checker(ip, timeout, 2053)
         loger(ip, 2053, result)
 
-def batch(iterable, n=10000):
-    l = len(iterable)
-    for ndx in range(0, l, n):
-        yield iterable[ndx:min(ndx + n, l)]
+def batch_file(filename, batch_size):
+    with open(filename, "r") as f:
+        batch = deque()
+        for line in f:
+            ip = line.strip()
+            if ip:  # نادیده گرفتن خطوط خالی
+                batch.append(ip)
+            if len(batch) == batch_size:
+                yield list(batch)
+                batch.clear()
+        if batch:
+            yield list(batch)
 
-with open("data/ips.txt", "r") as file:
-    ips = file.readlines()
+# شمارش تعداد خطوط برای نمایش زمان تقریبی
+def count_lines(filename):
+    with open(filename, "r") as f:
+        return sum(1 for _ in f)
 
-print(f"Estimated time: {convert_seconds(round(timeout * (len(ips)/max_workers)))} (approximate) and number of ip is : {len(ips)}")
+total_ips = count_lines("data/ips.txt")
+
+print(f"Estimated time: {convert_seconds(round(timeout * (total_ips / max_workers)))} (approximate) and number of ip is : {total_ips}")
 print("start searching...")
 
-pbar = tqdm(total=len(ips))  
+pbar = tqdm(total=total_ips)
 
-for ips_batch in batch(ips, max_ip):
+for ips_batch in batch_file("data/ips.txt", max_ip):
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         list(executor.map(scan_ip, ips_batch))
-    pbar.update(len(ips_batch)) 
+    pbar.update(len(ips_batch))
+
 pbar.close()
 
 time2 = time()
-
 loger("info", "", "Done!")
-input(f"press enter to close\n result in data folder \n The time it took to complete:{round(time2-time1)} second")
-
+input(f"\n✅ Completed in {convert_seconds(round(time2-time1))}\n📁 Results saved in 'data/' folder\nPress Enter to exit.")
