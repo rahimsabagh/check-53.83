@@ -148,6 +148,9 @@ def ip_range(ip1, ip2):
     except ValueError:
         print("ip invalid")
 
+def count_lines(filename):
+    with open(filename, "r") as f:
+        return sum(1 for _ in f)
 
 
 inp = int(input("#Toomaj\n 1. Create new ip range manually \n 2. Create new ip range with AS \n 3. Continue with last ip range \n 4. Create new ip range with country \n==> "))
@@ -193,9 +196,10 @@ elif inp == 4 :
 else : print("wrong input")
 
 
+total_ips = count_lines("data/ips.txt")
+print(f"number of ip is : {total_ips}")
+
 max_workers = int(input("max_workers ==>"))
-
-
 timeout = float(input("Set the timeout for requests please set by network status==>"))
 
 def checker(ip: str, timeout: float, port : int):
@@ -236,13 +240,8 @@ def batch_file(filename, batch_size):
         if batch:
             yield list(batch)
 
-def count_lines(filename):
-    with open(filename, "r") as f:
-        return sum(1 for _ in f)
 
-total_ips = count_lines("data/ips.txt")
-
-print(f"Estimated time: {convert_seconds(round(timeout * (total_ips / max_workers)))} (approximate) and number of ip is : {total_ips}")
+print(f"Estimated time: {convert_seconds(round(timeout * (total_ips / max_workers)))} (approximate)")
 print("start searching...")
 
 pbar = tqdm(total=total_ips)
