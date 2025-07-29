@@ -9,11 +9,6 @@ from concurrent.futures import ThreadPoolExecutor
 from collections import deque
 
 
-# Set the timeout for requests
-# please set by network status
-timeout = 1
-
-
 time1 = time()
 
 try:
@@ -105,7 +100,6 @@ def get_ip_ranges_by_country(country_code):
                 ip_start = parts[3]
                 count = int(parts[4])
                 try:
-                    # تبدیل به رنج‌های کوچکتر با ipaddress
                     for net in ipaddress.summarize_address_range(
                         ipaddress.IPv4Address(ip_start),
                         ipaddress.IPv4Address(int(ipaddress.IPv4Address(ip_start)) + count - 1)
@@ -201,10 +195,10 @@ else : print("wrong input")
 
 max_workers = int(input("max_workers ==>"))
 
-max_ip = int(input("max_ip(default : 10000) ==>"))
 
+timeout = float(input("Set the timeout for requests please set by network status==>"))
 
-def checker(ip: str, timeout: int, port : int):
+def checker(ip: str, timeout: float, port : int):
     """
     Check if the Plesk server at the given IP address and port 2083 is accessible.
     """
@@ -226,16 +220,15 @@ def checker(ip: str, timeout: int, port : int):
 
 def scan_ip(ip):
     ip = ip.strip()
-    if ping(ip, timeout) is not None:
-        result = checker(ip, timeout, 2053)
-        loger(ip, 2053, result)
+    result = checker(ip, timeout, 2053)
+    loger(ip, 2053, result)
 
 def batch_file(filename, batch_size):
     with open(filename, "r") as f:
         batch = deque()
         for line in f:
             ip = line.strip()
-            if ip:  # نادیده گرفتن خطوط خالی
+            if ip:  
                 batch.append(ip)
             if len(batch) == batch_size:
                 yield list(batch)
@@ -243,7 +236,6 @@ def batch_file(filename, batch_size):
         if batch:
             yield list(batch)
 
-# شمارش تعداد خطوط برای نمایش زمان تقریبی
 def count_lines(filename):
     with open(filename, "r") as f:
         return sum(1 for _ in f)
@@ -255,7 +247,7 @@ print("start searching...")
 
 pbar = tqdm(total=total_ips)
 
-for ips_batch in batch_file("data/ips.txt", max_ip):
+for ips_batch in batch_file("data/ips.txt", 1000):
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         list(executor.map(scan_ip, ips_batch))
     pbar.update(len(ips_batch))
