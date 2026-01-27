@@ -66,7 +66,11 @@ loger("info", "", "loger started")
 def get_ip_ranges_from_as(asn):
     url = f"https://stat.ripe.net/data/announced-prefixes/data.json?resource=AS{asn}"
     r = requests.get(url).json()
-    return [p["prefix"] for p in r["data"]["prefixes"]]
+    return [
+        p["prefix"]
+        for p in r["data"]["prefixes"]
+        if "." in p["prefix"]  
+    ]
 
     data = response.json()
     prefixes = data.get("data", {}).get("ipv4_prefixes", [])
