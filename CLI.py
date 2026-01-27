@@ -63,12 +63,10 @@ def loger(ip, port, text):
             send(f"{ip}:{port} is {text} ({timer()} CLI on {platform.system(), platform.uname().node})")
 loger("info", "", "loger started")
 
-def get_ip_ranges_from_as(as_number):
-    url = f"https://api.bgpview.io/asn/{as_number}/prefixes"
-    response = requests.get(url)
-    if response.status_code != 200:
-        print("خطا در دریافت اطلاعات")
-        return []
+def get_ip_ranges_from_as(asn):
+    url = f"https://stat.ripe.net/data/announced-prefixes/data.json?resource=AS{asn}"
+    r = requests.get(url).json()
+    return [p["prefix"] for p in r["data"]["prefixes"]]
 
     data = response.json()
     prefixes = data.get("data", {}).get("ipv4_prefixes", [])
