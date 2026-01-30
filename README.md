@@ -7,10 +7,10 @@ pip install -r <(curl -Ls https://raw.githubusercontent.com/rahimsabagh/check-53
 
 
 
-then run [main.py](https://github.com/rahimsabagh/check-Rahim53-83/blob/beta/CLI.py) or :<br/>
+then run [main.py](https://github.com/rahimsabagh/check-Rahim53-83/blob/main/CLI.py) or :<br/>
 **for CLI's:**
 ```
-python3 <(curl -Ls https://raw.githubusercontent.com/rahimsabagh/check-53.83/beta/CLI.py)
+python3 <(curl -Ls https://raw.githubusercontent.com/rahimsabagh/check-53.83/main/CLI.py)
 ```
 
 
