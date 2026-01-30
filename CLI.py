@@ -118,6 +118,41 @@ def save_ips_to_file(ranges, filename="data/ips.txt"):
                 f.write(str(ip) + "\n")
 
 
+def get_global_ip_ranges():
+    url = "https://ftp.ripe.net/pub/stats/ripencc/delegated-ripencc-latest"
+    resp = requests.get(url)
+    if resp.status_code != 200:
+        print("error from ripe")
+        return []
+    ranges = []
+    for line in resp.text.splitlines():
+        if "|ipv4|" in line and "allocated" in line:
+            parts = line.split("|")
+            if len(parts) > 4:
+                start = parts[3]
+                count = int(parts[4])
+                try:
+                    end_int = int(ipaddress.IPv4Address(start)) + count - 1
+                    for net in ipaddress.summarize_address_range(
+                        ipaddress.IPv4Address(start),
+                        ipaddress.IPv4Address(end_int)
+                    ):
+                        ranges.append(net)
+                except Exception as e:
+                    print(f"{start}: {e}")
+    return ranges
+
+def save_global_ips():
+    ranges = get_global_ip_ranges()
+    if not ranges:
+        print("nothing found")
+        return
+    print(f"{len(ranges)} range found saving to data/ips.txt...")
+    save_ips_to_file(ranges, "data/ips.txt")
+    print("all ips saved.")
+
+
+
 def ip_to_int(ip):
     parts = list(map(int, ip.split('.')))
     return (parts[0] << 24) + (parts[1] << 16) + (parts[2] << 8) + parts[3]
@@ -155,7 +190,7 @@ def count_lines(filename):
         return sum(1 for _ in f)
 
 
-inp = int(input("#Toomaj\n 1. Create new ip range manually \n 2. Create new ip range with AS \n 3. Continue with last ip range \n 4. Create new ip range with country \n==> "))
+inp = int(input("#Toomaj\n 1. Create new ip range manually \n 2. Create new ip range with AS \n 3. Continue with last ip range \n 4. Create new ip range with country \n 5. searching the whole world!!\n==> "))
 if inp == 1:
     my_file = open("data/ips.txt", "w")
     my_file.write("")
@@ -164,6 +199,7 @@ if inp == 1:
         ip_range(input("first ip (X.X.X.X) ==>"),(input("Last ip (X.X.X.X)==>")))
         if input("do you want to add more ip range? Y/n ==> ").upper() == "Y":pass
         else:break
+
 elif inp == 2 :
     my_file = open("data/ips.txt", "w")
     my_file.write("")
@@ -193,6 +229,12 @@ elif inp == 4 :
         print(f"all ips saved.")
     else:
         print("رنجی پیدا نشد.")
+
+elif inp == 5:
+    print("reciving...")
+    save_global_ips()
+
+
 
 
 else : print("wrong input")
